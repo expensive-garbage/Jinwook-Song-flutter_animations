@@ -1,16 +1,14 @@
-# flutter_animations
+# Flutter Animations
 
-A new Flutter project.
+| 프로젝트 기간 | 23.05.17                                           |
+| ------------- | -------------------------------------------------- |
+| 프로젝트 목적 | flutter로 다양한 애니메이션 구현                   |
+| Github        | https://github.com/Jinwook-Song/flutter_animations |
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+1. Implicit Animations
 
-A few resources to get you started if this is your first Flutter project:
+   애니메이션에 대해서 코드를 작성할 필요가 없다. 플러터가 알아서 다 해준다.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+   `Animated`로 시작하는 위젯이 이에 해당된다. ([dcos](https://docs.flutter.dev/ui/widgets/animation))
