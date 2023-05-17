@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class ImplicitAnimationsScreen extends StatefulWidget {
@@ -30,18 +32,15 @@ class _ImplicitAnimationsScreenState extends State<ImplicitAnimationsScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AnimatedAlign(
-              duration: const Duration(milliseconds: 150),
-              alignment:
-                  _visible ? Alignment.centerRight : Alignment.centerLeft,
-              child: AnimatedOpacity(
-                duration: const Duration(milliseconds: 150),
-                opacity: _visible ? 1 : 0,
-                child: Container(
-                  width: size.width * 0.8,
-                  height: size.width * 0.8,
-                  color: Colors.amber,
-                ),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              width: size.width * 0.4,
+              height: size.width * 0.4,
+              transform: Matrix4.rotationZ(_visible ? 1 / 2 * pi : 0),
+              transformAlignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: _visible ? Colors.pink : Colors.amber,
+                borderRadius: BorderRadius.circular(_visible ? 10 : 100),
               ),
             ),
             const SizedBox(height: 10),
