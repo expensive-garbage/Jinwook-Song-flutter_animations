@@ -13,7 +13,7 @@
 
    `Animated`로 시작하는 위젯이 이에 해당된다. ([dcos](https://docs.flutter.dev/ui/widgets/animation))
 
-   AnimatedContainer: 어떤것이든 transition 효과를 준다
+   - AnimatedContainer: 어떤것이든 transition 효과를 준다
 
    ```dart
    AnimatedContainer(
@@ -28,3 +28,27 @@
                  ),
                ),
    ```
+
+   - Curves ([docs](https://api.flutter.dev/flutter/animation/Curves-class.html))
+   - TweenAnimationBuilder
+     나만의 implicit animation 위젯을 만들 수 있다
+     내장된 AnimatedWidget이 없는 경우 사용할 수 있다
+     tween: from ~ to 사이의 값으로 transition 효과를 줌
+     value: currently animated value
+     ```dart
+     TweenAnimationBuilder(
+                   tween: ColorTween(
+                     begin: Colors.amber,
+                     end: Colors.purple,
+                   ),
+                   curve: Curves.bounceInOut,
+                   duration: const Duration(seconds: 5),
+                   builder: (context, value, child) {
+                     return Image.network(
+                       'https://upload.wikimedia.org/wikipedia/commons/4/4f/Dash%2C_the_mascot_of_the_Dart_programming_language.png',
+                       color: value,
+                       colorBlendMode: BlendMode.hue,
+                     );
+                   },
+                 ),
+     ```

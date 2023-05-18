@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class ImplicitAnimationsScreen extends StatefulWidget {
@@ -21,7 +19,6 @@ class _ImplicitAnimationsScreenState extends State<ImplicitAnimationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -32,18 +29,26 @@ class _ImplicitAnimationsScreenState extends State<ImplicitAnimationsScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              width: size.width * 0.4,
-              height: size.width * 0.4,
-              transform: Matrix4.rotationZ(_visible ? 1 / 2 * pi : 0),
-              transformAlignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: _visible ? Colors.pink : Colors.amber,
-                borderRadius: BorderRadius.circular(_visible ? 10 : 100),
-              ),
+            TweenAnimationBuilder(
+              tween: _visible
+                  ? ColorTween(
+                      begin: Colors.amber,
+                      end: Colors.purple,
+                    )
+                  : ColorTween(
+                      begin: Colors.purple,
+                      end: Colors.amber,
+                    ),
+              duration: const Duration(seconds: 1),
+              builder: (context, value, child) {
+                return Image.network(
+                  'https://upload.wikimedia.org/wikipedia/commons/4/4f/Dash%2C_the_mascot_of_the_Dart_programming_language.png',
+                  color: value,
+                  colorBlendMode: BlendMode.hue,
+                );
+              },
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 50),
             ElevatedButton(onPressed: _toggle, child: const Text('Go!'))
           ],
         ),
