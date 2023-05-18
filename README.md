@@ -5,6 +5,10 @@
 | 프로젝트 목적 | flutter로 다양한 애니메이션 구현                   |
 | Github        | https://github.com/Jinwook-Song/flutter_animations |
 
+[Animation Decision Tree](https://docs.flutter.dev/ui/animations)
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/35e564f0-838c-4cdd-8347-ec6a30181ecf/Untitled.png)
+
 ---
 
 1. Implicit Animations
@@ -52,3 +56,34 @@
                    },
                  ),
      ```
+
+2. Explicit Animations
+
+   여러 위젯을 animation 하고싶은 경우,
+
+   animation에 더 많은 통제를 하고싶은 경우(loop, pause, reverse, etc…)
+
+   - SingleTickerProviderStateMixin
+
+   Ticker: call its callback once per animation frame
+
+   SingleTickerProviderStateMixin: only tick while the current tree is enabled
+
+   → 빠른 rebuild를 위해 Ticker를 사용하고, enable 상태에서만 활성화하도록
+
+   ```dart
+   class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
+       with SingleTickerProviderStateMixin {
+     late final AnimationController _animationController =
+         AnimationController(vsync: this);
+
+     @override
+     Widget build(BuildContext context) {
+       return Scaffold(
+         appBar: AppBar(
+           title: const Text('Explicit Animations'),
+         ),
+       );
+     }
+   }
+   ```
