@@ -72,10 +72,48 @@
    → 빠른 rebuild를 위해 Ticker를 사용하고, enable 상태에서만 활성화하도록
 
    ```dart
+   import 'package:flutter/material.dart';
+
+   class ExplicitAnimationsScreen extends StatefulWidget {
+     const ExplicitAnimationsScreen({super.key});
+
+     @override
+     State<ExplicitAnimationsScreen> createState() =>
+         _ExplicitAnimationsScreenState();
+   }
+
    class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
        with SingleTickerProviderStateMixin {
-     late final AnimationController _animationController =
-         AnimationController(vsync: this);
+     late final AnimationController _animationController = AnimationController(
+       vsync: this,
+       duration: const Duration(
+         seconds: 10,
+       ),
+       lowerBound: 50.0,
+       upperBound: 100.0,
+     )
+       // Called when the animation value changes
+       // 하지만 전체를 rebuild하기 때문에 매우 부적합하다
+       ..addListener(() {
+         setState(() {});
+       });
+
+     void _play() {
+       _animationController.forward();
+     }
+
+     void _pause() {
+       _animationController.stop();
+     }
+
+     void _rewind() {
+       _animationController.reverse();
+     }
+
+     @override
+     void initState() {
+       super.initState();
+     }
 
      @override
      Widget build(BuildContext context) {
@@ -83,7 +121,58 @@
          appBar: AppBar(
            title: const Text('Explicit Animations'),
          ),
+         body: Center(
+           child: Column(
+             mainAxisAlignment: MainAxisAlignment.center,
+             children: [
+               Text(
+                 _animationController.value.toStringAsFixed(3),
+                 style: const TextStyle(fontSize: 40),
+               ),
+               const SizedBox(
+                 height: 20,
+               ),
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.center,
+                 children: [
+                   ElevatedButton(
+                     onPressed: _play,
+                     child: const Text(
+                       'Play',
+                     ),
+                   ),
+                   ElevatedButton(
+                     onPressed: _pause,
+                     child: const Text(
+                       'Pause',
+                     ),
+                   ),
+                   ElevatedButton(
+                     onPressed: _rewind,
+                     child: const Text(
+                       'Rewind',
+                     ),
+                   ),
+                 ],
+               )
+             ],
+           ),
+         ),
        );
      }
    }
    ```
+
+   - AnimatedBuilder
+     animation이 바뀌는 부분만 새롭게 render
+     ```
+     AnimatedBuilder(
+                   animation: _animationController,
+                   builder: (context, child) {
+                     return Text(
+                       _animationController.value.toStringAsFixed(3),
+                       style: const TextStyle(fontSize: 40),
+                     );
+                   },
+                 ),
+     ```
