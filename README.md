@@ -176,3 +176,50 @@
                    },
                  ),
      ```
+   - Explicit Animations
+
+   ```dart
+   // Connect Tween and AnimationController
+     late final Animation<Decoration> _decorationAnimation = DecorationTween(
+       begin: BoxDecoration(
+         color: Colors.amber,
+         borderRadius: BorderRadius.circular(120),
+       ),
+       end: BoxDecoration(
+         color: Colors.purple,
+         borderRadius: BorderRadius.circular(20),
+       ),
+     ).animate(_animationController);
+
+     late final Animation<double> _rotationAnimation = Tween(
+       begin: 0.0,
+       end: 1 / 8,
+     ).animate(_animationController);
+
+     late final Animation<double> _scaleAnimation = Tween(
+       begin: 1.0,
+       end: 0.5,
+     ).animate(_animationController);
+
+     late final Animation<Offset> _offsetAnimation = Tween(
+       begin: Offset.zero,
+       end: const Offset(0, -1),
+     ).animate(_animationController);
+
+   SlideTransition(
+                 position: _offsetAnimation,
+                 child: ScaleTransition(
+                   scale: _scaleAnimation,
+                   child: RotationTransition(
+                     turns: _rotationAnimation,
+                     child: DecoratedBoxTransition(
+                       decoration: _decorationAnimation,
+                       child: const SizedBox(
+                         width: 200,
+                         height: 200,
+                       ),
+                     ),
+                   ),
+                 ),
+               ),
+   ```

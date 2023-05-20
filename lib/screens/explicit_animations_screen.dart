@@ -12,8 +12,35 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _animationController = AnimationController(
     vsync: this,
-    duration: const Duration(seconds: 10),
+    duration: const Duration(milliseconds: 300),
   );
+
+// Connect Tween and AnimationController
+  late final Animation<Decoration> _decorationAnimation = DecorationTween(
+    begin: BoxDecoration(
+      color: Colors.amber,
+      borderRadius: BorderRadius.circular(120),
+    ),
+    end: BoxDecoration(
+      color: Colors.purple,
+      borderRadius: BorderRadius.circular(20),
+    ),
+  ).animate(_animationController);
+
+  late final Animation<double> _rotationAnimation = Tween(
+    begin: 0.0,
+    end: 1 / 8,
+  ).animate(_animationController);
+
+  late final Animation<double> _scaleAnimation = Tween(
+    begin: 1.0,
+    end: 0.5,
+  ).animate(_animationController);
+
+  late final Animation<Offset> _offsetAnimation = Tween(
+    begin: Offset.zero,
+    end: const Offset(0, -1),
+  ).animate(_animationController);
 
   void _play() {
     _animationController.forward();
@@ -28,8 +55,9 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
   }
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -42,17 +70,24 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AnimatedBuilder(
-              animation: _animationController,
-              builder: (context, child) {
-                return Text(
-                  _animationController.value.toStringAsFixed(3),
-                  style: const TextStyle(fontSize: 40),
-                );
-              },
+            SlideTransition(
+              position: _offsetAnimation,
+              child: ScaleTransition(
+                scale: _scaleAnimation,
+                child: RotationTransition(
+                  turns: _rotationAnimation,
+                  child: DecoratedBoxTransition(
+                    decoration: _decorationAnimation,
+                    child: const SizedBox(
+                      width: 200,
+                      height: 200,
+                    ),
+                  ),
+                ),
+              ),
             ),
             const SizedBox(
-              height: 20,
+              height: 60,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
