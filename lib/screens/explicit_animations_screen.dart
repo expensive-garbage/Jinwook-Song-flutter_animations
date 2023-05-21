@@ -14,9 +14,18 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
     vsync: this,
     duration: const Duration(seconds: 2),
     reverseDuration: const Duration(seconds: 1),
-  )..addListener(() {
+  )
+    ..addListener(() {
       _progress.value = _animationController.value;
+    })
+    ..addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _rewind();
+      } else if (status == AnimationStatus.dismissed) {
+        _play();
+      }
     });
+
   late final CurvedAnimation _curvedAnimation = CurvedAnimation(
     parent: _animationController,
     curve: Curves.elasticOut,
@@ -60,6 +69,19 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
 
   void _rewind() {
     _animationController.reverse();
+  }
+
+  bool _looping = false;
+
+  void _toggleLooping() {
+    if (_looping) {
+      _animationController.stop();
+    } else {
+      _animationController.repeat(reverse: true);
+    }
+    setState(() {
+      _looping = !_looping;
+    });
   }
 
   @override
@@ -121,6 +143,12 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
                   onPressed: _rewind,
                   child: const Text(
                     'Rewind',
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: _toggleLooping,
+                  child: Text(
+                    _looping ? 'Stop' : 'Loop',
                   ),
                 ),
               ],
