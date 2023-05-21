@@ -57,7 +57,7 @@
                  ),
      ```
 
-2. Explicit Animations
+1. Explicit Animations
 
    여러 위젯을 animation 하고싶은 경우,
 
@@ -177,7 +177,6 @@
                       ),
      ```
    - Explicit Animations
-
      ```dart
      // Connect Tween and AnimationController
           late final Animation<Decoration> _decorationAnimation = DecorationTween(
@@ -223,7 +222,6 @@
                       ),
                     ),
      ```
-
    - Curve
      ```dart
      late final AnimationController _animationController = AnimationController(
@@ -236,4 +234,33 @@
          curve: Curves.elasticOut,
          reverseCurve: Curves.elasticIn,
        );
+     ```
+   - ValueNotifier & ValueListenableBuilder
+     animation 진행 상황을 render할때, setState를 이용하지 않고,
+     ValueNotifier의 값을 변경하고, 이 변화된 값을 렌더해주는 ValueListenableBuilder를 이용하여 최적화 할 수 있다
+     ```dart
+     late final AnimationController _animationController = AnimationController(
+         vsync: this,
+         duration: const Duration(seconds: 2),
+         reverseDuration: const Duration(seconds: 1),
+       )..addListener(() {
+           _progress.value = _animationController.value;
+         });
+
+     final ValueNotifier<double> _progress = ValueNotifier(0.0);
+
+       void _onChanged(double value) {
+         _progress.value = value;
+         _animationController.value = value;
+       }
+
+     ValueListenableBuilder(
+                   valueListenable: _progress,
+                   builder: (context, value, child) {
+                     return Slider(
+                       value: value,
+                       onChanged: _onChanged,
+                     );
+                   },
+                 )
      ```

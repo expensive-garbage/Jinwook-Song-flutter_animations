@@ -14,7 +14,9 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
     vsync: this,
     duration: const Duration(seconds: 2),
     reverseDuration: const Duration(seconds: 1),
-  );
+  )..addListener(() {
+      _progress.value = _animationController.value;
+    });
   late final CurvedAnimation _curvedAnimation = CurvedAnimation(
     parent: _animationController,
     curve: Curves.elasticOut,
@@ -66,6 +68,13 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
     super.dispose();
   }
 
+  final ValueNotifier<double> _progress = ValueNotifier(0.0);
+
+  void _onChanged(double value) {
+    _progress.value = value;
+    _animationController.value = value;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,9 +101,7 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
                 ),
               ),
             ),
-            const SizedBox(
-              height: 60,
-            ),
+            const SizedBox(height: 60),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -117,6 +124,16 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 60),
+            ValueListenableBuilder(
+              valueListenable: _progress,
+              builder: (context, value, child) {
+                return Slider(
+                  value: value,
+                  onChanged: _onChanged,
+                );
+              },
             )
           ],
         ),
