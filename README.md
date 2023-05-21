@@ -74,152 +74,166 @@
    ```dart
    import 'package:flutter/material.dart';
 
-   class ExplicitAnimationsScreen extends StatefulWidget {
-     const ExplicitAnimationsScreen({super.key});
+      class ExplicitAnimationsScreen extends StatefulWidget {
+        const ExplicitAnimationsScreen({super.key});
 
-     @override
-     State<ExplicitAnimationsScreen> createState() =>
-         _ExplicitAnimationsScreenState();
-   }
+        @override
+        State<ExplicitAnimationsScreen> createState() =>
+            _ExplicitAnimationsScreenState();
+      }
 
-   class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
-       with SingleTickerProviderStateMixin {
-     late final AnimationController _animationController = AnimationController(
-       vsync: this,
-       duration: const Duration(
-         seconds: 10,
-       ),
-       lowerBound: 50.0,
-       upperBound: 100.0,
-     )
-       // Called when the animation value changes
-       // 하지만 전체를 rebuild하기 때문에 매우 부적합하다
-       ..addListener(() {
-         setState(() {});
-       });
+      class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
+          with SingleTickerProviderStateMixin {
+        late final AnimationController _animationController = AnimationController(
+          vsync: this,
+          duration: const Duration(
+            seconds: 10,
+          ),
+          lowerBound: 50.0,
+          upperBound: 100.0,
+        )
+          // Called when the animation value changes
+          // 하지만 전체를 rebuild하기 때문에 매우 부적합하다
+          ..addListener(() {
+            setState(() {});
+          });
 
-     void _play() {
-       _animationController.forward();
-     }
+        void _play() {
+          _animationController.forward();
+        }
 
-     void _pause() {
-       _animationController.stop();
-     }
+        void _pause() {
+          _animationController.stop();
+        }
 
-     void _rewind() {
-       _animationController.reverse();
-     }
+        void _rewind() {
+          _animationController.reverse();
+        }
 
-     @override
-     void initState() {
-       super.initState();
-     }
+        @override
+        void initState() {
+          super.initState();
+        }
 
-     @override
-     Widget build(BuildContext context) {
-       return Scaffold(
-         appBar: AppBar(
-           title: const Text('Explicit Animations'),
-         ),
-         body: Center(
-           child: Column(
-             mainAxisAlignment: MainAxisAlignment.center,
-             children: [
-               Text(
-                 _animationController.value.toStringAsFixed(3),
-                 style: const TextStyle(fontSize: 40),
-               ),
-               const SizedBox(
-                 height: 20,
-               ),
-               Row(
-                 mainAxisAlignment: MainAxisAlignment.center,
-                 children: [
-                   ElevatedButton(
-                     onPressed: _play,
-                     child: const Text(
-                       'Play',
-                     ),
-                   ),
-                   ElevatedButton(
-                     onPressed: _pause,
-                     child: const Text(
-                       'Pause',
-                     ),
-                   ),
-                   ElevatedButton(
-                     onPressed: _rewind,
-                     child: const Text(
-                       'Rewind',
-                     ),
-                   ),
-                 ],
-               )
-             ],
-           ),
-         ),
-       );
-     }
-   }
+        @override
+        Widget build(BuildContext context) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Explicit Animations'),
+            ),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    _animationController.value.toStringAsFixed(3),
+                    style: const TextStyle(fontSize: 40),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _play,
+                        child: const Text(
+                          'Play',
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: _pause,
+                        child: const Text(
+                          'Pause',
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: _rewind,
+                        child: const Text(
+                          'Rewind',
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        }
+      }
    ```
 
    - AnimatedBuilder
      animation이 바뀌는 부분만 새롭게 render
-     ```
+     ```dart
      AnimatedBuilder(
-                   animation: _animationController,
-                   builder: (context, child) {
-                     return Text(
-                       _animationController.value.toStringAsFixed(3),
-                       style: const TextStyle(fontSize: 40),
-                     );
-                   },
-                 ),
+                        animation: _animationController,
+                        builder: (context, child) {
+                          return Text(
+                            _animationController.value.toStringAsFixed(3),
+                            style: const TextStyle(fontSize: 40),
+                          );
+                        },
+                      ),
      ```
    - Explicit Animations
 
-   ```dart
-   // Connect Tween and AnimationController
-     late final Animation<Decoration> _decorationAnimation = DecorationTween(
-       begin: BoxDecoration(
-         color: Colors.amber,
-         borderRadius: BorderRadius.circular(120),
-       ),
-       end: BoxDecoration(
-         color: Colors.purple,
-         borderRadius: BorderRadius.circular(20),
-       ),
-     ).animate(_animationController);
+     ```dart
+     // Connect Tween and AnimationController
+          late final Animation<Decoration> _decorationAnimation = DecorationTween(
+            begin: BoxDecoration(
+              color: Colors.amber,
+              borderRadius: BorderRadius.circular(120),
+            ),
+            end: BoxDecoration(
+              color: Colors.purple,
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ).animate(_animationController);
 
-     late final Animation<double> _rotationAnimation = Tween(
-       begin: 0.0,
-       end: 1 / 8,
-     ).animate(_animationController);
+          late final Animation<double> _rotationAnimation = Tween(
+            begin: 0.0,
+            end: 1 / 8,
+          ).animate(_animationController);
 
-     late final Animation<double> _scaleAnimation = Tween(
-       begin: 1.0,
-       end: 0.5,
-     ).animate(_animationController);
+          late final Animation<double> _scaleAnimation = Tween(
+            begin: 1.0,
+            end: 0.5,
+          ).animate(_animationController);
 
-     late final Animation<Offset> _offsetAnimation = Tween(
-       begin: Offset.zero,
-       end: const Offset(0, -1),
-     ).animate(_animationController);
+          late final Animation<Offset> _offsetAnimation = Tween(
+            begin: Offset.zero,
+            end: const Offset(0, -1),
+          ).animate(_animationController);
 
-   SlideTransition(
-                 position: _offsetAnimation,
-                 child: ScaleTransition(
-                   scale: _scaleAnimation,
-                   child: RotationTransition(
-                     turns: _rotationAnimation,
-                     child: DecoratedBoxTransition(
-                       decoration: _decorationAnimation,
-                       child: const SizedBox(
-                         width: 200,
-                         height: 200,
-                       ),
-                     ),
-                   ),
-                 ),
-               ),
-   ```
+        SlideTransition(
+                      position: _offsetAnimation,
+                      child: ScaleTransition(
+                        scale: _scaleAnimation,
+                        child: RotationTransition(
+                          turns: _rotationAnimation,
+                          child: DecoratedBoxTransition(
+                            decoration: _decorationAnimation,
+                            child: const SizedBox(
+                              width: 200,
+                              height: 200,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+     ```
+
+   - Curve
+     ```dart
+     late final AnimationController _animationController = AnimationController(
+         vsync: this,
+         duration: const Duration(seconds: 2),
+         reverseDuration: const Duration(seconds: 1),
+       );
+       late final CurvedAnimation _curvedAnimation = CurvedAnimation(
+         parent: _animationController,
+         curve: Curves.elasticOut,
+         reverseCurve: Curves.elasticIn,
+       );
+     ```
