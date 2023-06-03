@@ -501,3 +501,23 @@
     }
   }
   ```
+  - interpolation
+    `transform`: Tween값을 lowerBound, uppderBound의 값의 범위로 바꿔준다.
+    ```dart
+    late final AnimationController _animationController = AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 2000),
+        lowerBound: -size.width,
+        upperBound: size.width,
+        value: 0,
+      );
+
+      late final Tween<double> _rotation = Tween(
+        begin: -15,
+        end: 15,
+      );
+
+    final angle = _rotation.transform(
+                (_animationController.value + size.width / 2) / size.width,
+              );
+    ```

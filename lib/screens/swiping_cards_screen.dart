@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class SwipingCardsScreen extends StatefulWidget {
@@ -10,12 +12,18 @@ class SwipingCardsScreen extends StatefulWidget {
 class _SwipingCardsScreenState extends State<SwipingCardsScreen>
     with SingleTickerProviderStateMixin {
   late final size = MediaQuery.of(context).size;
+
   late final AnimationController _animationController = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 2000),
     lowerBound: -size.width,
     upperBound: size.width,
     value: 0,
+  );
+
+  late final Tween<double> _rotation = Tween(
+    begin: -15,
+    end: 15,
   );
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
@@ -37,7 +45,6 @@ class _SwipingCardsScreenState extends State<SwipingCardsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -47,6 +54,10 @@ class _SwipingCardsScreenState extends State<SwipingCardsScreen>
       body: AnimatedBuilder(
         animation: _animationController,
         builder: (context, child) {
+          final angle = _rotation.transform(
+                  (_animationController.value + size.width / 2) / size.width) *
+              pi /
+              180; // convert to radians
           return Stack(children: [
             Align(
               alignment: Alignment.topCenter,
@@ -54,13 +65,16 @@ class _SwipingCardsScreenState extends State<SwipingCardsScreen>
                 onHorizontalDragUpdate: _onHorizontalDragUpdate,
                 onHorizontalDragEnd: _onHorizontalDragEnd,
                 child: Transform.translate(
-                  offset: Offset(_animationController.value, 0),
-                  child: Material(
-                    elevation: 20,
-                    color: Colors.red.shade100,
-                    child: SizedBox(
-                      width: size.width * 0.8,
-                      height: size.height * 0.5,
+                  offset: Offset(_animationController.value, 30),
+                  child: Transform.rotate(
+                    angle: angle,
+                    child: Material(
+                      elevation: 20,
+                      color: Colors.red.shade100,
+                      child: SizedBox(
+                        width: size.width * 0.8,
+                        height: size.height * 0.5,
+                      ),
                     ),
                   ),
                 ),
