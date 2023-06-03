@@ -16,8 +16,8 @@ class _SwipingCardsScreenState extends State<SwipingCardsScreen>
   late final AnimationController _animationController = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 2000),
-    lowerBound: -size.width,
-    upperBound: size.width,
+    lowerBound: -(size.width + 100),
+    upperBound: size.width + 100,
     value: 0,
   );
 
@@ -31,10 +31,17 @@ class _SwipingCardsScreenState extends State<SwipingCardsScreen>
   }
 
   void _onHorizontalDragEnd(DragEndDetails details) {
-    _animationController.animateTo(
-      0,
-      curve: Curves.elasticOut,
-    );
+    final bound = size.width - 100;
+    if (_animationController.value >= bound) {
+      _animationController.animateTo(size.width + 100);
+    } else if (_animationController.value <= -bound) {
+      _animationController.animateTo(-(size.width + 100));
+    } else {
+      _animationController.animateTo(
+        0,
+        curve: Curves.elasticOut,
+      );
+    }
   }
 
   @override
@@ -65,7 +72,7 @@ class _SwipingCardsScreenState extends State<SwipingCardsScreen>
                 onHorizontalDragUpdate: _onHorizontalDragUpdate,
                 onHorizontalDragEnd: _onHorizontalDragEnd,
                 child: Transform.translate(
-                  offset: Offset(_animationController.value, 30),
+                  offset: Offset(_animationController.value, 100),
                   child: Transform.rotate(
                     angle: angle,
                     child: Material(

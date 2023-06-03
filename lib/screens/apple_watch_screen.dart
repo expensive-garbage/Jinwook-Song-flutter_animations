@@ -18,7 +18,7 @@ class _AppleWatchScreenState extends State<AppleWatchScreen>
 
   late final CurvedAnimation _curvedAnimation = CurvedAnimation(
     parent: _animationController,
-    curve: Curves.bounceOut,
+    curve: Curves.elasticOut,
   );
 
   List<double> _getRandomValueList({int count = 3}) {
