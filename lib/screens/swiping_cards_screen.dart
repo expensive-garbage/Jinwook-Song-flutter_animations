@@ -31,15 +31,25 @@ class _SwipingCardsScreenState extends State<SwipingCardsScreen>
     begin: 0.8,
     end: 1.0,
   );
+  late final Tween<double> _buttonScale = Tween(
+    begin: 1.0,
+    end: 0.9,
+  );
+
+  late final ColorTween _buttonColor = ColorTween(
+    begin: Colors.amber,
+    end: Colors.pink,
+  );
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
     _animationController.value += details.delta.dx;
   }
 
-  void _dismissCard({required bool forward}) {
+  void _dismissCard({required bool forward, int duration = 300}) {
     final factor = forward ? 1 : -1;
     _animationController
-        .animateTo((size.width + 100) * factor)
+        .animateTo((size.width + 100) * factor,
+            duration: Duration(milliseconds: duration))
         .whenComplete(() {
       _animationController.value = 0;
       _cardIndex += 1;
@@ -85,6 +95,10 @@ class _SwipingCardsScreenState extends State<SwipingCardsScreen>
 
           final scale = _scale
               .transform(_animationController.value.abs() / (size.width + 100));
+          final buttonScale = _buttonScale
+              .transform(_animationController.value.abs() / (size.width + 100));
+          final buttonColor = _buttonColor
+              .transform(_animationController.value.abs() / (size.width + 100));
 
           return Stack(
             alignment: Alignment.topCenter,
@@ -113,6 +127,78 @@ class _SwipingCardsScreenState extends State<SwipingCardsScreen>
                   ),
                 ),
               ),
+              Positioned(
+                  bottom: 100,
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () =>
+                            _dismissCard(forward: false, duration: 300),
+                        child: Transform.scale(
+                          scale: _animationController.value.isNegative
+                              ? buttonScale
+                              : 1.0,
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: _animationController.value.isNegative
+                                  ? buttonColor
+                                  : Colors.amber,
+                              borderRadius: BorderRadius.circular(100),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.7),
+                                  blurRadius: 5.0,
+                                  spreadRadius: 0.0,
+                                  offset: const Offset(0, 7),
+                                )
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.arrow_back_ios_new_sharp,
+                              color: Colors.white,
+                              size: 40,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 80,
+                      ),
+                      GestureDetector(
+                        onTap: () => _dismissCard(forward: true, duration: 300),
+                        child: Transform.scale(
+                          scale: _animationController.value.isNegative
+                              ? 1.0
+                              : buttonScale,
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: _animationController.value.isNegative
+                                  ? Colors.amber
+                                  : buttonColor,
+                              borderRadius: BorderRadius.circular(100),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.7),
+                                  blurRadius: 5.0,
+                                  spreadRadius: 0.0,
+                                  offset: const Offset(0, 7),
+                                )
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.arrow_forward_ios_sharp,
+                              color: Colors.white,
+                              size: 40,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ))
             ],
           );
         },
