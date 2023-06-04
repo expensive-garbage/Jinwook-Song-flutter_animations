@@ -590,3 +590,34 @@
     }
   }
   ```
+  - AnimatedSwitcher: Animate between old child and new child
+    Container는 변경되지 않고 그 속성만 변하기 때문에 animation효과가 나타나지 않는다
+    따라서 key를 부여하여 다른 child임을 명시할 수 있다
+    ```dart
+    AnimatedSwitcher(
+                duration: const Duration(
+                  milliseconds: 500,
+                ),
+                child: Container(
+                  key: ValueKey(_currentPage),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage(
+                        'assets/images/covers/yeonjae0$_currentPage.jpeg',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+    ```
+  - BackdropFilter
+    ```dart
+    child: BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: 15,
+                      sigmaY: 15,
+                    ),
+                    child: Container(color: Colors.black.withOpacity(0.5)),
+                  ),
+    ```
